@@ -12,7 +12,7 @@ namespace SMSSendingApp1
         {
             using (SMSContext db = new SMSContext())
             {
-                User user1 = new User { UserId = "+380661851061", Password = "qwerty", Name = "Sasha", Address = "arlekin@arlekin.com" };
+                User user1 = new User { UserId = "+380661851160", Password = "qwerty", Name = "Sasha", Address = "arlekin@arlekin.com" };
                 db.Users.Add(user1);
                 db.SaveChanges();
             }
