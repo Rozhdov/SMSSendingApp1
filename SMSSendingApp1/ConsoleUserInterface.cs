@@ -7,7 +7,7 @@ using static System.Console;
 
 namespace SMSSendingApp1
 {
-    static class ConsoleUserInterface
+    static partial class ConsoleUserInterface
     {
         public static void StartInteface()
         {
@@ -49,7 +49,7 @@ namespace SMSSendingApp1
                     WriteLine("Input you password:");
                     string passwordInput = ReadLine();
                     var AuthorizedUser = db.Users.Find(phoneInput);
-                    if (AuthorizedUser == null)
+                    if ((AuthorizedUser == null) || AuthorizedUser.Password != passwordInput)
                     {
                         WriteLine("Incorrect phone number or password");
                         return;
@@ -117,7 +117,7 @@ namespace SMSSendingApp1
                     string consoleInput = ReadLine();
                     consoleInput = consoleInput.Replace(" ", "").Replace("(", "").Replace(")", "");
 
-                    if (InputValidation.PhoneNumberIsValid(consoleInput))
+                    if (PhoneNumberIsValid(consoleInput))
                     {
                         var tempUser = (from u in db.Users
                                         where u.UserId == consoleInput
@@ -173,7 +173,7 @@ namespace SMSSendingApp1
             {
                 WriteLine("Please, enter password:");
                 string consoleInput = ReadLine();
-                if (InputValidation.PasswordIsValid(consoleInput))
+                if (PasswordIsValid(consoleInput))
                 {
                     unregisteredUser.Password = consoleInput;
                     return unregisteredUser;
@@ -206,7 +206,7 @@ namespace SMSSendingApp1
             {
                 WriteLine("Please, enter username:");
                 string consoleInput = ReadLine();
-                if (InputValidation.NameIsValid(consoleInput))
+                if (NameIsValid(consoleInput))
                 {
                     unregisteredUser.Name = consoleInput;
                     return unregisteredUser;
@@ -237,7 +237,7 @@ namespace SMSSendingApp1
             {
                 WriteLine("Please, enter email:");
                 string consoleInput = ReadLine();
-                if (InputValidation.AddressIsValid(consoleInput))
+                if (AddressIsValid(consoleInput))
                 {
                     unregisteredUser.Address = consoleInput;
                     return unregisteredUser;

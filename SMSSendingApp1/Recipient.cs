@@ -22,7 +22,8 @@ namespace SMSSendingApp1
             }
             set
             {
-                if (InputValidation.PhoneNumberIsValid(value))
+                Regex Expression = new Regex(@"^[0-9\+\*\#]{3,13}$");
+                if (Expression.IsMatch(value))
                     recipientId = value;
                 else
                     throw new ArgumentException("Incorrect value for userId");

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SMSSendingApp1
 {
     // class for validation of input data
-    static class InputValidation
+    static partial class ConsoleUserInterface
     {
         static public bool PhoneNumberIsValid(string Phone)
         {
