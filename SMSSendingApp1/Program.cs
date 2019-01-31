@@ -12,6 +12,7 @@ namespace SMSSendingApp1
         {
             
             ConsoleUserInterface.StartInteface();
+
             Console.WriteLine("Done");
             Console.ReadKey();
         }
