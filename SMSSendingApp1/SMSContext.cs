@@ -12,8 +12,13 @@ namespace SMSSendingApp1
         public SMSContext() : base("DbConnection")
         { }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<Message> Messages { get; set; }
-        public DbSet<Recipient> Recipients { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<Recipient> Recipients { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

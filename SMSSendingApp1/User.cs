@@ -5,29 +5,39 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.RegularExpressions;
 
 namespace SMSSendingApp1
 {
     class User
     {
 
-        [Key]
-        [MaxLength(50)]
-        public string UserId { get; set; }
+        [MaxLength(13)]
+        private string userId;
+        public string UserId {
+            get
+            {
+                return this.userId;
+            }
+            set
+            {
+                if (InputValidation.PhoneNumberIsValid(value))
+                    userId = value;
+                else
+                    throw new ArgumentException("Incorrect value for userId");
+            }
+        }
 
-        [Required]
-        [MaxLength(50)]
+        [MaxLength(50), Required]
         public string Password { get; set; }
 
-        [Required]
-        [MaxLength(50)]
+        [MaxLength(50), Required]
         public string Name { get; set; }
 
-        [Required]
-        [MaxLength(50)]
+        [MaxLength(50), Required]
         public string Address { get; set; }
 
-        public ICollection<Message> Messages { get; set; }
+        public virtual ICollection<Message> Messages { get; set; }
     }
 
 

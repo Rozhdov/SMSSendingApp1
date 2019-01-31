@@ -17,11 +17,11 @@ namespace SMSSendingApp1
         
         [ForeignKey("User")]
         public string Sender_Phone { get; set; }
-        public User User { get; set; }
+        public virtual User User { get; set; }
 
         [ForeignKey("Recipient")]
         public string Recipient_Phone { get; set; }
-        public Recipient Recipient { get; set; }
+        public virtual Recipient Recipient { get; set; }
 
 
         public DateTime Messaging_Time { get; set; }
