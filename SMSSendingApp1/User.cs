@@ -12,8 +12,8 @@ namespace SMSSendingApp1
     public class User
     {
         [DataMember]
-        [MaxLength(13)]
         private string userId;
+        [StringLength(13)]
         public string UserId {
             get
             {
@@ -30,15 +30,15 @@ namespace SMSSendingApp1
             }
         }
         [DataMember]
-        [MaxLength(50), Required]
+        [StringLength(50), Required]
         public string Password { get; set; }
 
         [DataMember]
-        [MaxLength(50), Required]
+        [StringLength(50), Required]
         public string Name { get; set; }
 
         [DataMember]
-        [MaxLength(50), Required]
+        [StringLength(50), Required]
         public string Address { get; set; }
 
         public virtual ICollection<Message> Messages { get; set; }

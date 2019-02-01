@@ -11,7 +11,7 @@ namespace SMSSendingApp1
         static void Main(string[] args)
         {
             
-            ConsoleUserInterface.StartInteface();
+            ConsoleUI.ConsoleUserInterface.StartInteface();
 
             Console.WriteLine("Done");
             Console.ReadKey();
