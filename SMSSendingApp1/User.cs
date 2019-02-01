@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
+using System.Runtime.Serialization;
 
 namespace SMSSendingApp1
 {
-    class User
+    [Serializable]
+    [DataContract]
+    public class User
     {
-
+        [DataMember]
         [MaxLength(13)]
         private string userId;
         public string UserId {
@@ -29,13 +29,15 @@ namespace SMSSendingApp1
                     throw new ArgumentException("Incorrect value for userId");
             }
         }
-
+        [DataMember]
         [MaxLength(50), Required]
         public string Password { get; set; }
 
+        [DataMember]
         [MaxLength(50), Required]
         public string Name { get; set; }
 
+        [DataMember]
         [MaxLength(50), Required]
         public string Address { get; set; }
 

@@ -42,6 +42,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,15 +51,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logger\BinaryMessageLogger.cs" />
+    <Compile Include="ConsoleMessageSender.cs" />
     <Compile Include="ConsoleUserInterface.cs" />
+    <Compile Include="Logger\IMessageLogger.cs" />
     <Compile Include="InputValidation.cs" />
+    <Compile Include="Logger\JsonMessageLogger.cs" />
     <Compile Include="Message.cs" />
+    <Compile Include="IMessageSender.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recipient.cs" />
+    <Compile Include="SMSSender.cs" />
     <Compile Include="User.cs" />
     <Compile Include="SMSContext.cs" />
+    <Compile Include="Logger\XmlMessageLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

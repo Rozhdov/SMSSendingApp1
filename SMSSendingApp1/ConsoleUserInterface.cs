@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SMSSendingApp1.Logger;
 using static System.Console;
 
 namespace SMSSendingApp1
@@ -46,6 +47,7 @@ namespace SMSSendingApp1
                 {
                     WriteLine("Input your phone number:");
                     string phoneInput = ReadLine();
+                    phoneInput = phoneInput.Replace(" ", "").Replace("(", "").Replace(")", "");
                     WriteLine("Input you password:");
                     string passwordInput = ReadLine();
                     var AuthorizedUser = db.Users.Find(phoneInput);
@@ -56,8 +58,8 @@ namespace SMSSendingApp1
                     }
                     else
                     {
-                        AuthorizedInteface(AuthorizedUser);
-                        //before authorized interface implementation
+                        WriteLine("Authorization succesfull");
+                        authorizedInteface(AuthorizedUser);
                         return;
                     }
                 }
@@ -102,7 +104,9 @@ namespace SMSSendingApp1
                 }
                 db.SaveChanges();
             }
-            AuthorizedInteface(UnregisteredUser);
+            WriteLine("Registration and authorization succesfull");
+            authorizedInteface(UnregisteredUser);
+            return;
 
 
         }
@@ -119,9 +123,7 @@ namespace SMSSendingApp1
 
                     if (PhoneNumberIsValid(consoleInput))
                     {
-                        var tempUser = (from u in db.Users
-                                        where u.UserId == consoleInput
-                                        select u).FirstOrDefault();
+                        var tempUser = db.Users.Find(consoleInput);
                         if (tempUser != null)
                         {
                             WriteLine("User with this phone nuber already exist");
@@ -262,9 +264,76 @@ namespace SMSSendingApp1
             }
         }
 
-        private static void AuthorizedInteface(User AuthorizedUser)
+        private static void authorizedInteface(User AuthorizedUser)
         {
-            WriteLine("Grac");
+            while (true)
+            {
+                WriteLine("1 - send SMS message");
+                WriteLine("q - log out");
+                string consoleInput = ReadLine();
+                consoleInput.Trim();
+                switch (consoleInput)
+                {
+                    case "q":
+                        return;
+                    case "1":
+                        sendSMS(AuthorizedUser);
+                        break;
+                    default:
+                        WriteLine("Incorrect input - try again");
+                        break;
+                }
+            }
+        }
+
+        private static void sendSMS(User AuthorizedUser)
+        {
+            WriteLine("Please, enter reciever phone number");
+            string recieverNumber = ReadLine();
+            recieverNumber = recieverNumber.Replace(" ", "").Replace("(", "").Replace(")", "");
+            if (!PhoneNumberIsValid(recieverNumber))
+            {
+                WriteLine("Incorrect phone number");
+                return;
+            }
+            WriteLine("Please, enter your massage:");
+            string message = ReadLine();
+            Message MessageToSend = new Message
+            {
+                Sender_Phone = AuthorizedUser.UserId,
+                Recipient_Phone = recieverNumber,
+                Messaging_Time = DateTime.UtcNow,
+                Text_Message = message
+            };
+
+            using (SMSContext db = new SMSContext())
+            {
+                
+
+                var temp = db.Recipients.Find(recieverNumber);
+                if (temp == null)
+                {
+                    Recipient MessageRecipient = new Recipient
+                    {
+                        RecipientId = recieverNumber
+                    };
+                    db.Recipients.Add(MessageRecipient);
+                    db.SaveChanges();
+                }
+                
+                db.Messages.Add(MessageToSend);                
+                db.SaveChanges();
+            }
+
+            IMessageSender ConsoleMessage = new ConsoleMessageSender();
+            ConsoleMessage.Send(MessageToSend);
+            IMessageLogger XMLLog = new XmlMessageLogger();
+            XMLLog.Send(MessageToSend);
+            IMessageLogger BinaryLog = new BinaryMessageLogger();
+            BinaryLog.Send(MessageToSend);
+            IMessageLogger JsonLog = new JsonMessageLogger();
+            JsonLog.Send(MessageToSend);
+
         }
     }
 }

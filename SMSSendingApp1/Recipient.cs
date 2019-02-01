@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
+using System.Runtime.Serialization;
 
 namespace SMSSendingApp1
 {
-    class Recipient
+    [Serializable]
+    [DataContract]
+    public class Recipient
     {
 
+        [DataMember]
         [MaxLength(13)]
         private string recipientId;
         public string RecipientId
@@ -30,9 +31,11 @@ namespace SMSSendingApp1
             }
         }
 
+        [DataMember]
         [MaxLength(50)]
         public string Name { get; set; }
 
+        [DataMember]
         [MaxLength(50)]
         public string Address { get; set; }
 
