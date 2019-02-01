@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using SMSSendingApp1.Logger;
 using SMSSendingApp1.Sender;
 using static System.Console;
+using static SMSSendingApp1.ConsoleUI.ConsoleInputValidation;
 
 namespace SMSSendingApp1
 {
     namespace ConsoleUI
     {
-        static partial class ConsoleUserInterface
+        //Simple console UI for authorization/regitration and message sending with input checks
+        static class ConsoleUserInterface
         {
             public static void StartInteface()
             {
@@ -87,9 +89,7 @@ namespace SMSSendingApp1
                 using (SMSContext db = new SMSContext())
                 {
                     db.Users.Add(UnregisteredUser);
-                    var tempRecipient = (from r in db.Recipients
-                                         where r.RecipientId == UnregisteredUser.UserId
-                                         select r).FirstOrDefault<Recipient>();
+                    var tempRecipient = db.Recipients.Find(UnregisteredUser.UserId);
                     if (tempRecipient == null)
                     {
                         var newRecipient = new Recipient()
@@ -105,7 +105,17 @@ namespace SMSSendingApp1
                         tempRecipient.Name = UnregisteredUser.Name;
                         tempRecipient.Address = UnregisteredUser.Address;
                     }
-                    db.SaveChanges();
+
+                    //In case of inconsistency between input data checks and DB structure
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (System.Data.Entity.Validation.DbEntityValidationException e)
+                    {
+                        WriteLine("Exception thrown when updating database: {0} \n {1}", e.Message, e.EntityValidationErrors);
+                        return;
+                    }
                 }
                 WriteLine("Registration and authorization succesfull");
                 authorizedInteface(UnregisteredUser);
@@ -311,8 +321,6 @@ namespace SMSSendingApp1
 
                 using (SMSContext db = new SMSContext())
                 {
-
-
                     var temp = db.Recipients.Find(recieverNumber);
                     if (temp == null)
                     {
@@ -321,21 +329,29 @@ namespace SMSSendingApp1
                             RecipientId = recieverNumber
                         };
                         db.Recipients.Add(MessageRecipient);
+                    }
+                    db.Messages.Add(MessageToSend);
+
+                    //In case of inconsistency between input data checks and DB structure
+                    try
+                    {
                         db.SaveChanges();
                     }
-
-                    db.Messages.Add(MessageToSend);
-                    db.SaveChanges();
+                    catch (System.Data.Entity.Validation.DbEntityValidationException e)
+                    {
+                        WriteLine("Exception thrown when updating database: {0}\n{1}", e.Message, e.EntityValidationErrors);
+                        return;
+                    }
                 }
 
                 IMessageSender ConsoleMessage = new ConsoleMessageSender();
                 ConsoleMessage.Send(MessageToSend);
-                IMessageLogger XMLLog = new XmlMessageLogger();
-                XMLLog.Send(MessageToSend);
-                IMessageLogger BinaryLog = new BinaryMessageLogger();
-                BinaryLog.Send(MessageToSend);
-                IMessageLogger JsonLog = new JsonMessageLogger();
-                JsonLog.Send(MessageToSend);
+                IMessageLogger Log = new XmlMessageLogger();
+                Log.Send(MessageToSend);
+                Log = new BinaryMessageLogger();
+                Log.Send(MessageToSend);
+                Log = new JsonMessageLogger();
+                Log.Send(MessageToSend);
 
             }
         }

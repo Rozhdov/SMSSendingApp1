@@ -26,6 +26,7 @@ namespace SMSSendingApp1
 
         [DataMember]
         public DateTime Messaging_Time { get; set; }
+
         [DataMember]
         public string Text_Message { get; set; }
     }

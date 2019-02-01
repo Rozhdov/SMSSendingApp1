@@ -10,10 +10,9 @@ namespace SMSSendingApp1
     {
         static void Main(string[] args)
         {
-            
             ConsoleUI.ConsoleUserInterface.StartInteface();
 
-            Console.WriteLine("Done");
+            Console.WriteLine("Press any key to terminate program");
             Console.ReadKey();
         }
     }
